@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="./crt.css" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0a0000;
+        color: #fff;
+      }
+
+      h1 {
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .wrapper {
+        position: relative;
+        width: 90vmin;
+      }
+
+      .wrapper:after {
+        content: "";
+        display: block;
+        padding-bottom: 80%;
+      }
+
+      #player {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
+
+      .stripe {
+        position: absolute;
+        height: 15%;
+        width: 100%;
+        background-color: #222;
+        left: 0;
+      }
+
+      .stripe.top {
+        top: 0;
+      }
+
+      .stripe.bottom {
+        bottom: 0;
+      }
+
+      #overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      #tv {
+        position: absolute;
+        width: 150%;
+        height: 135%;
+        background-image: url(tv.png);
+        background-size: cover;
+        top: -12%;
+        left: -10%;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">
+      <h1>LOADING...</h1>
+    </div>
+    <div id="click-me" style="display: none">
+      <h1>CLICK ANYWHERE TO JUMP INTO AN IMMERSIVE CONSUMER EXPERIENCE</h1>
+    </div>
+    <div id="app" style="display: none">
+      <div class="wrapper">
+        <div id="player"></div>
+        <div class="stripe top"></div>
+        <div class="stripe bottom"></div>
+        <div id="overlay" class="crt"></div>
+        <div id="tv"></div>
+      </div>
+      <audio id="audio">
+        <source
+          src="https://core-mix.stream.laut.fm/core-mix"
+          type="audio/mpeg"
+        />
+      </audio>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://www.youtube.com/player_api"
+    ></script>
+    <script type="text/javascript">
+      var videoId = "bURV-p73XXo";
+      var player;
+
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("player", {
+          height: "100%",
+          width: "100%",
+          videoId: videoId,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            cc_load_policy: 0,
+            mute: 1,
+            loop: 1,
+            playlist: videoId,
+            enablejsapi: 1,
+            origin: window.location.hostname,
+          },
+          events: {
+            onReady: onPlayerReady,
+          },
+        });
+
+        function onPlayerReady(event) {
+          player.setPlaybackRate(2);
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("click-me").style.display = "block";
+
+          function init() {
+            document.body.removeEventListener("click", init, true);
+            document.getElementById("click-me").style.display = "none";
+            document.getElementById("app").style.display = "block";
+            document.getElementById("audio").play();
+            player.playVideo();
+          }
+
+          document.body.addEventListener("click", init, true);
+        }
+      }
+    </script>
+  </body>
+</html>
